@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CuttingCounter : BaseCounter, IHasProgress {
 
+    public static event EventHandler OnAnyCut;
     public event EventHandler<IHasProgress.onProgressChangedEventArgs> OnProgressChanged;
     public event EventHandler OnCut;
 
@@ -28,12 +29,10 @@ public class CuttingCounter : BaseCounter, IHasProgress {
                         progressNormalized = (float)cuttingProgress / cuttingRecipeSO.cuttingProgressMax
                     });
                 }
-            }
-            else {
+            } else {
                 //Player not carrying anything
             }
-        }
-        else {
+        } else {
             //There is a Kitchen Object here
             if (player.HasKitchenObject()) {
                 // Player is carrying something
@@ -43,8 +42,7 @@ public class CuttingCounter : BaseCounter, IHasProgress {
                         GetKitchenObject().DestroySelf();
                     }
                 }
-            }
-            else {
+            } else {
                 //Player is not carrying anything
                 GetKitchenObject().SetKitchenObjectParent(player);
             }
@@ -58,6 +56,7 @@ public class CuttingCounter : BaseCounter, IHasProgress {
             cuttingProgress++;
 
             OnCut?.Invoke(this, EventArgs.Empty);
+            OnAnyCut?.Invoke(this, EventArgs.Empty);
 
             CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(GetKitchenObject().GetKitchenObjectSO());
 
@@ -87,8 +86,7 @@ public class CuttingCounter : BaseCounter, IHasProgress {
         CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOWithInput(inputKitchenObjectSO);
         if (cuttingRecipeSO != null) {
             return cuttingRecipeSO.output;
-        }
-        else {
+        } else {
             return null;
         }
     }
