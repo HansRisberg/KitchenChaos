@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour {
 
+    public static SoundManager Instance { get; private set; }
+
+
     [SerializeField] private AudioClipRefsSO audioClipRefsSO;
 
     private void Start() {
@@ -11,6 +14,10 @@ public class SoundManager : MonoBehaviour {
         Player.Instance.OnPickedSomething += Player_OnPickedSomething;
         BaseCounter.OnAnyObjectPlacedHere += BaseCounter_OnAnyObjectPlacedHere;
         TrashCounter.OnAnyObjectTrashed += TrashCounter_OnAnyObjectTrashed;
+    }
+
+    private void Awake() {
+        Instance = this;
     }
 
     private void TrashCounter_OnAnyObjectTrashed(object sender, System.EventArgs e) {
@@ -48,5 +55,9 @@ public class SoundManager : MonoBehaviour {
 
     private void PlaySound(AudioClip audioClip, Vector3 position, float volume = 1f) {
         AudioSource.PlayClipAtPoint(audioClip, position, volume);
+    }
+
+    public void PlayFootstepsSound(Vector3 position, float volume) {
+        PlaySound(audioClipRefsSO.footstep, position, volume);
     }
 }
